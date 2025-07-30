@@ -49,41 +49,41 @@ function GM:LoadFonts(font, genericFont)
 	})
 
 	surface.CreateFont("ixMenuMiniFont", {
-		font = "Draconis",
+		font = font,
 		size = math.max(ScreenScale(4), 18),
 		weight = 300,
 	})
 
 	surface.CreateFont("ixMenuButtonFont", {
-		font = "Draconis",
+		font = font,
 		size = ScreenScale(14),
 		extended = true,
 		weight = 100
 	})
 
 	surface.CreateFont("ixMenuButtonFontSmall", {
-		font = "Draconis",
+		font = font,
 		size = ScreenScale(10),
 		extended = true,
 		weight = 100
 	})
 
 	surface.CreateFont("ixMenuButtonFontThick", {
-		font = "Draconis",
+		font = font,
 		size = ScreenScale(14),
 		extended = true,
 		weight = 300
 	})
 
 	surface.CreateFont("ixMenuButtonLabelFont", {
-		font = "Draconis",
+		font = font,
 		size = 28,
 		extended = true,
 		weight = 100
 	})
 
 	surface.CreateFont("ixMenuButtonHugeFont", {
-		font = "Draconis",
+		font = font,
 		size = ScreenScale(24),
 		extended = true,
 		weight = 100
@@ -175,14 +175,14 @@ function GM:LoadFonts(font, genericFont)
 	})
 
 	surface.CreateFont("ixSmallTitleFont", {
-		font = "Draconis",
+		font = font,
 		size = math.max(ScreenScale(12), 24),
 		extended = true,
 		weight = 100
 	})
 
 	surface.CreateFont("ixMinimalTitleFont", {
-		font = "Draconis",
+		font = font,
 		size = math.max(ScreenScale(8), 22),
 		extended = true,
 		weight = 800
@@ -219,7 +219,7 @@ function GM:LoadFonts(font, genericFont)
 	})
 
 	-- Introduction fancy font.
-	font = "Draconis"
+	font = font
 
 	surface.CreateFont("ixIntroTitleFont", {
 		font = font,
@@ -286,7 +286,7 @@ function GM:LoadFonts(font, genericFont)
 	})
 
 	surface.CreateFont( "ixCustomFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
 		extended = true,
 		size = 32,
 		weight = 500,
@@ -304,7 +304,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixCustomNameFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
 		extended = true,
 		size = 28,
 		weight = 500,
@@ -322,7 +322,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixCustomDescFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
 		extended = true,
 		size = 24,
 		weight = 500,
@@ -340,7 +340,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixYellFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
 		extended = true,
 		size = 38,
 		weight = 500,
@@ -358,7 +358,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixScreamFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
 		extended = true,
 		size = 46,
 		weight = 500,
@@ -376,7 +376,69 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixWhisperFont", {
-		font = "Draconis", -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		font = font, -- On Windows/macOS, use the font-name which is shown to you by your operating system Font Viewer. On Linux, use the file name
+		extended = true,
+		size = 22,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	} )
+
+	surface.CreateFont("ixChatMechanicusFont", {
+		font = "Alien Encounters",
+		size = 28,
+		extended = true,
+		weight = 600,
+		antialias = true
+	})
+
+	surface.CreateFont( "ixYellMechanicusFont", {
+		font = "Alien Encounters",
+		extended = true,
+		size = 38,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	} )
+
+	surface.CreateFont( "ixScreamMechanicusFont", {
+		font = "Alien Encounters",
+		extended = true,
+		size = 46,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	} )
+
+	surface.CreateFont( "ixWhisperMechanicusFont", {
+		font = "Alien Encounters",
 		extended = true,
 		size = 22,
 		weight = 500,
