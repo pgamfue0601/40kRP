@@ -405,11 +405,11 @@ Schema.voices.AddClass("Dispatch", function(client)
 	return client:IsDispatch()
 end)
 
-Schema.voices.Add("Humanoid", "Pito", "Diablo, que loco mi negro.", "phx/xxdd.wav", true)
-
-Schema.voices.Add("Humanoid", "Emperador1", "¡POR EL EMPERADOR!", "phx/emperor.wav", true)
-Schema.voices.Add("Humanoid", "Emperador2", "¡POR EL DIOS EMPERADOR!", "phx/emperor1.wav", true)
-
 Schema.voices.AddClass("Humanoid", function(client)
-	return client:GetCharacter():GetFaction() == FACTION_FELINID or client:GetCharacter():GetFaction() == FACTION_GUARD or client:GetCharacter():GetFaction() == FACTION_RATLING
+	return client:IsHumanoid()
 end)
+
+Schema.voices.Add("Humanoid", "Grito de guerra", "*Suelta un alarido de guerra.*", "lobo2.mp3", true)
+Schema.voices.Add("Humanoid", "Guerra", "¡GUERRAAAAAAAAA!", "lobo1.mp3", true)
+Schema.voices.Add("Humanoid", "Gusanos", "¡Voy a acabar con vosotros, malditos gusanos!", "lobo3.mp3", true)
+Schema.voices.Add("Humanoid", "FyH", "¡Fuerza y honor!", "lobo4.mp3", true)

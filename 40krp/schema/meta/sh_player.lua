@@ -10,6 +10,10 @@ function playerMeta:IsMechanicus()
 	return faction == FACTION_MECHANICUS
 end
 
+function playerMeta:IsHumanoid()
+	local faction = self:Team()
+	return faction == FACTION_GUARD or faction == FACTION_FELINID or faction == FACTION_RATLING
+end
 
 function playerMeta:IsDispatch()
 	local name = self:Name()
