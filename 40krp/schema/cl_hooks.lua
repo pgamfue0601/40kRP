@@ -276,6 +276,83 @@ netstream.Hook("ViewObjectives", function(data)
 	vgui.Create("ixViewObjectives"):Populate(data)
 end)
 
+-- ============================================
+-- Sistema de sonidos ambientales para Mechanicus
+-- ============================================
+
+-- Lista de sonidos mecánicos/robóticos
+local mechanicusSounds = {
+	"npc/scanner/scanner_talk1.wav",
+	"npc/scanner/scanner_talk2.wav",
+}
+
+-- Configuración
+local MECHANICUS_SOUND_MIN_DELAY = 8   -- Tiempo mínimo entre sonidos (segundos)
+local MECHANICUS_SOUND_MAX_DELAY = 20  -- Tiempo máximo entre sonidos (segundos)
+local MECHANICUS_SOUND_RANGE = 150     -- Distancia máxima para escuchar (unidades)
+local MECHANICUS_SOUND_VOLUME = 0.15    -- Volumen del sonido (0-1)
+
+-- Variables de control
+local nextMechanicusSoundTime = 0
+
+-- Función para reproducir sonido mecánico en un jugador Mechanicus
+local function PlayMechanicusAmbientSound(ply)
+	if (!IsValid(ply)) then return end
+	
+	local sound = mechanicusSounds[math.random(#mechanicusSounds)]
+	local pos = ply:GetPos() + Vector(0, 0, 40) -- A la altura del torso
+	
+	-- Crear el sonido con volumen y rango limitado
+	local snd = CreateSound(ply, sound)
+	if (snd) then
+		snd:SetSoundLevel(60) -- Nivel de sonido bajo para corto alcance
+		snd:PlayEx(MECHANICUS_SOUND_VOLUME, math.random(95, 110)) -- Pitch ligeramente variable
+		
+		timer.Simple(1, function()
+			if (snd) then
+				snd:Stop()
+			end
+		end)
+	end
+end
+
+-- Hook para reproducir sonidos en jugadores Mechanicus cercanos
+hook.Add("Think", "MechanicusAmbientSounds", function()
+	-- Solo ejecutar cada cierto tiempo
+	if (CurTime() < nextMechanicusSoundTime) then return end
+	
+	-- Establecer siguiente tiempo de ejecución
+	nextMechanicusSoundTime = CurTime() + math.Rand(MECHANICUS_SOUND_MIN_DELAY, MECHANICUS_SOUND_MAX_DELAY)
+	
+	local localPlayer = LocalPlayer()
+	if (!IsValid(localPlayer) or !localPlayer:GetCharacter()) then return end
+	
+	-- Si el jugador local es Mechanicus, reproducir sonido en primera persona
+	if (localPlayer:GetCharacter():GetFaction() == FACTION_MECHANICUS) then
+		-- Reproducir sonido local (solo el jugador lo escucha)
+		local sound = mechanicusSounds[math.random(#mechanicusSounds)]
+		surface.PlaySound(sound)
+		return
+	end
+	
+	-- Buscar jugadores Mechanicus cercanos
+	for _, ply in player.Iterator() do
+		if (IsValid(ply) and ply:GetCharacter() and ply != localPlayer) then
+			local faction = ply:GetCharacter():GetFaction()
+			
+			if (faction == FACTION_MECHANICUS) then
+				local distance = localPlayer:GetPos():Distance(ply:GetPos())
+				
+				-- Solo reproducir si está dentro del rango
+				if (distance <= MECHANICUS_SOUND_RANGE) then
+					PlayMechanicusAmbientSound(ply)
+				end
+			end
+		end
+	end
+end)
+
+
 
 
 
