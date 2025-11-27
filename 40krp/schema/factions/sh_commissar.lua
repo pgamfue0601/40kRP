@@ -17,7 +17,7 @@ function FACTION:OnCharacterCreated(client, character)
     inventory:Add("boltammo", 2)
     inventory:Add("powersword", 1)
 
-    character:SetName("Comisario Jr. " .. character:GetName());
+    character:SetName("Comisario Cadete " .. character:GetName());
 end
 
 FACTION_COMMISSAR = FACTION.index
