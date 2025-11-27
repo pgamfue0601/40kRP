@@ -282,15 +282,19 @@ end)
 
 -- Lista de sonidos mecánicos/robóticos
 local mechanicusSounds = {
-	"npc/scanner/scanner_talk1.wav",
-	"npc/scanner/scanner_talk2.wav",
+	"vo/mechanicus/mechanicusbreath.wav",
+	"vo/mechanicus/mechanicusnormal01.wav",
+	"vo/mechanicus/mechanicusnormal02.wav",
+	"vo/mechanicus/mechanicusnormal03.wav",
+	"vo/mechanicus/mechanicusnormal04.wav",
+	"vo/mechanicus/mechanicusnormal05.wav",
 }
 
 -- Configuración
-local MECHANICUS_SOUND_MIN_DELAY = 8   -- Tiempo mínimo entre sonidos (segundos)
-local MECHANICUS_SOUND_MAX_DELAY = 20  -- Tiempo máximo entre sonidos (segundos)
+local MECHANICUS_SOUND_MIN_DELAY = 15   -- Tiempo mínimo entre sonidos (segundos)
+local MECHANICUS_SOUND_MAX_DELAY = 45  -- Tiempo máximo entre sonidos (segundos)
 local MECHANICUS_SOUND_RANGE = 150     -- Distancia máxima para escuchar (unidades)
-local MECHANICUS_SOUND_VOLUME = 0.15    -- Volumen del sonido (0-1)
+local MECHANICUS_SOUND_VOLUME = 0.7    -- Volumen del sonido (0-1)
 
 -- Variables de control
 local nextMechanicusSoundTime = 0
