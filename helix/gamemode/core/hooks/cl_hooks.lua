@@ -394,7 +394,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont("ixChatMechanicusFont", {
-		font = "Alien Encounters",
+		font = "LED Calculator",
 		size = 28,
 		extended = true,
 		weight = 600,
@@ -402,7 +402,7 @@ function GM:LoadFonts(font, genericFont)
 	})
 
 	surface.CreateFont( "ixYellMechanicusFont", {
-		font = "Alien Encounters",
+		font = "LED Calculator",
 		extended = true,
 		size = 38,
 		weight = 500,
@@ -420,7 +420,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixScreamMechanicusFont", {
-		font = "Alien Encounters",
+		font = "LED Calculator",
 		extended = true,
 		size = 46,
 		weight = 500,
@@ -438,7 +438,7 @@ function GM:LoadFonts(font, genericFont)
 	} )
 
 	surface.CreateFont( "ixWhisperMechanicusFont", {
-		font = "Alien Encounters",
+		font = "LED Calculator",
 		extended = true,
 		size = 22,
 		weight = 500,

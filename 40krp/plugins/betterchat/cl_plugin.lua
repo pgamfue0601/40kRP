@@ -7,6 +7,105 @@ local command = ""
 
 local symbolPattern = "[~`!@#$%%%^&*()_%+%-={}%[%]|;:'\",%./<>?]"
 
+-- Crear fuentes personalizadas para Mechanicus
+surface.CreateFont("ixMechanicusChatFont", {
+	font = "LED Calculator",
+	size = ScreenScale(7),
+	weight = 500,
+	extended = true
+})
+
+surface.CreateFont("ixMechanicusChatFontItalic", {
+	font = "LED Calculator",
+	size = ScreenScale(7),
+	weight = 500,
+	italic = true,
+	extended = true
+})
+
+-- Lista de chat types que usan fuente normal de Mechanicus
+local mechanicusNormalTypes = {
+	["ic"] = true,
+	["whisper"] = true,
+	["w"] = true,        -- /w en Helix
+	["yell"] = true,
+	["y"] = true,        -- /y en Helix
+	["radio"] = true,
+	["scream"] = true
+}
+
+-- Lista de chat types que usan fuente itálica de Mechanicus (acciones/estados)
+local mechanicusItalicTypes = {
+	["me"] = true,
+	["meclose"] = true,
+	["mefar"] = true,
+	["mefarfar"] = true,
+	["it"] = true,
+	["itclose"] = true,
+	["itfar"] = true,
+	["itfarfar"] = true
+}
+
+-- Función para configurar el hook de Mechanicus en el chat
+local function SetupMechanicusChat()
+	if (!ix or !ix.chat or !ix.chat.Send or ix.chat.mechanicusBetterChatHooked) then return end
+	
+	local originalChatSend = ix.chat.Send
+	ix.chat.mechanicusBetterChatHooked = true
+	
+	ix.chat.Send = function(speaker, chatType, text, anonymous, data)
+		local chatClass = ix.chat.classes[chatType]
+		local originalFont = nil
+		local newFont = nil
+		
+		-- Verificar si el speaker es Mechanicus
+		if (IsValid(speaker) and speaker:GetCharacter()) then
+			local faction = speaker:GetCharacter():GetFaction()
+			
+			if (faction == FACTION_MECHANICUS) then
+				-- Determinar qué fuente usar
+				if (mechanicusItalicTypes[chatType]) then
+					newFont = "ixMechanicusChatFontItalic"
+				elseif (mechanicusNormalTypes[chatType]) then
+					newFont = "ixMechanicusChatFont"
+				end
+			end
+		end
+		
+		-- Cambiar la fuente temporalmente si es Mechanicus
+		if (newFont and chatClass) then
+			originalFont = chatClass.font
+			chatClass.font = newFont
+		end
+		
+		-- Llamar la función original
+		originalChatSend(speaker, chatType, text, anonymous, data)
+		
+		-- Restaurar la fuente original
+		if (originalFont ~= nil and chatClass) then
+			chatClass.font = originalFont
+		elseif (newFont and chatClass) then
+			chatClass.font = nil
+		end
+	end
+end
+
+-- Intentar configurar el hook en varios momentos
+hook.Add("InitPostEntity", "MechanicusBetterChatSetup", function()
+	timer.Simple(1, SetupMechanicusChat)
+end)
+
+hook.Add("InitializedChatClasses", "MechanicusBetterChatSetup", function()
+	timer.Simple(0.1, SetupMechanicusChat)
+end)
+
+hook.Add("CharacterLoaded", "MechanicusBetterChatSetup", function()
+	SetupMechanicusChat()
+end)
+
+-- También intentar después de un delay mayor para asegurar que betterchat haya registrado sus clases
+timer.Simple(35, SetupMechanicusChat)
+
 local function GetTypingIndicator(text)
 	local prefix = text:utf8sub(1, 1)
 

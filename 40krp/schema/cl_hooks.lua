@@ -49,6 +49,8 @@ function Schema:CanPlayerJoinClass(client, class, info)
 end
 
 function Schema:CharacterLoaded(character)
+	-- SetupMechanicusChat se llama desde los hooks de abajo
+	
 	if (character:IsCombine() or character:IsMechanicus()) then
 		vgui.Create("ixCombineDisplay")
 	elseif (IsValid(ix.gui.combine)) then
@@ -273,3 +275,10 @@ netstream.Hook("ViewObjectives", function(data)
 	Schema:AddCombineDisplayMessage("@cViewObjectives")
 	vgui.Create("ixViewObjectives"):Populate(data)
 end)
+
+
+
+
+
+
+

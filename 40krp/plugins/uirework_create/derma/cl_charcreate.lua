@@ -113,6 +113,15 @@ function PANEL:Init()
 	descriptionProceed:Dock(BOTTOM)
 	descriptionProceed.DoClick = function()
 		if (self:VerifyProgression("description")) then
+			-- Si la facción es psyker, ir al panel de clases psyker
+			local faction = ix.faction.indices[self.payload.faction]
+			if (faction and faction.uniqueID == "psyker") then
+				self.progress:IncrementProgress()
+				self:PopulatePsykerClasses()
+				self:SetActiveSubpanel("psykerclass")
+				return
+			end
+
 			-- there are no panels on the attributes section other than the create button, so we can just create the character
 			if (#self.attributesPanel:GetChildren() < 2) then
 				self:SendPayload()
@@ -123,6 +132,63 @@ function PANEL:Init()
 			self:SetActiveSubpanel("attributes")
 		end
 	end
+
+	-- psyker class selection subpanel
+	self.psykerClassPanel = self:AddSubpanel("psykerclass")
+	self.psykerClassPanel:SetTitle("Elegir Clase de Psíquico")
+	self.psykerClassPanel.title:SetContentAlignment(5)
+
+	local psykerClassModelList = self.psykerClassPanel:Add("Panel")
+	psykerClassModelList:Dock(LEFT)
+	psykerClassModelList:SetSize(halfWidth, halfHeight)
+
+	local psykerClassBack = psykerClassModelList:Add("ixMenuButton")
+	psykerClassBack:SetText("return")
+	psykerClassBack:SetContentAlignment(4)
+	psykerClassBack:SizeToContents()
+	psykerClassBack:Dock(BOTTOM)
+	psykerClassBack.DoClick = function()
+		self.progress:DecrementProgress()
+		self:SetActiveSubpanel("description")
+	end
+
+	self.psykerClassModel = psykerClassModelList:Add("ixModelPanel")
+	self.psykerClassModel:Dock(FILL)
+	self.psykerClassModel:SetModel(self.factionModel:GetModel())
+	self.psykerClassModel:SetFOV(modelFOV - 13)
+	self.psykerClassModel.PaintModel = self.psykerClassModel.Paint
+
+	self.psykerClassRightPanel = self.psykerClassPanel:Add("Panel")
+	self.psykerClassRightPanel:SetWide(halfWidth + padding * 2)
+	self.psykerClassRightPanel:Dock(RIGHT)
+
+	local psykerClassProceed = self.psykerClassRightPanel:Add("ixMenuButton")
+	psykerClassProceed:SetText("proceed")
+	psykerClassProceed:SetContentAlignment(6)
+	psykerClassProceed:SizeToContents()
+	psykerClassProceed:Dock(BOTTOM)
+	psykerClassProceed.DoClick = function()
+		-- there are no panels on the attributes section other than the create button, so we can just create the character
+		if (#self.attributesPanel:GetChildren() < 2) then
+			self:SendPayload()
+			return
+		end
+
+		self.progress:IncrementProgress()
+		self:SetActiveSubpanel("attributes")
+	end
+
+	-- Panel para la información de la clase seleccionada
+	self.psykerClassInfoPanel = self.psykerClassRightPanel:Add("Panel")
+	self.psykerClassInfoPanel:Dock(TOP)
+	self.psykerClassInfoPanel:SetTall(120)
+	self.psykerClassInfoPanel:DockMargin(0, 0, 0, 16)
+
+	-- Panel scrollable para los botones de clases
+	self.psykerClassButtonsPanel = self.psykerClassRightPanel:Add("ixCharMenuButtonList")
+	self.psykerClassButtonsPanel:Dock(FILL)
+
+	self.psykerClassButtons = {}
 
 	-- attributes subpanel
 	self.attributes = self:AddSubpanel("attributes")
@@ -140,7 +206,13 @@ function PANEL:Init()
 	attributesBack:Dock(BOTTOM)
 	attributesBack.DoClick = function()
 		self.progress:DecrementProgress()
-		self:SetActiveSubpanel("description")
+		-- Si la facción es psyker, volver al panel de clases psyker
+		local faction = ix.faction.indices[self.payload.faction]
+		if (faction and faction.uniqueID == "psyker") then
+			self:SetActiveSubpanel("psykerclass")
+		else
+			self:SetActiveSubpanel("description")
+		end
 	end
 
 	self.attributesModel = attributesModelList:Add("ixModelPanel")
@@ -497,6 +569,87 @@ function PANEL:Populate()
 	end
 
 	self.bInitialPopulate = true
+end
+
+function PANEL:PopulatePsykerClasses()
+	-- Limpiar botones de clase existentes
+	for _, v in pairs(self.psykerClassButtons) do
+		if (IsValid(v)) then
+			v:Remove()
+		end
+	end
+
+	self.psykerClassButtons = {}
+
+	-- Limpiar paneles
+	self.psykerClassButtonsPanel:Clear()
+	self.psykerClassInfoPanel:Clear()
+
+	-- Obtener la facción psyker
+	local factionIndex = self.payload.faction
+	local faction = ix.faction.indices[factionIndex]
+
+	if (!faction) then return end
+
+	-- Encontrar las clases disponibles para la facción psyker
+	local availableClasses = {}
+	for k, v in pairs(ix.class.list) do
+		if (v.faction == factionIndex) then
+			availableClasses[#availableClasses + 1] = {index = k, data = v}
+		end
+	end
+
+	-- Si no hay clases disponibles, retornar
+	if (#availableClasses == 0) then return end
+
+	local classButtons = {}
+	local firstClass = true
+
+	for _, classData in ipairs(availableClasses) do
+		local button = self.psykerClassButtonsPanel:Add("ixMenuSelectionButton")
+		button:SetBackgroundColor(faction.color or color_white)
+		button:SetText(L(classData.data.name):utf8upper())
+		button:SizeToContents()
+		button:SetButtonList(classButtons)
+		button.classIndex = classData.index
+		button.classData = classData.data
+		button.OnSelected = function(panel)
+			self.payload:Set("class", panel.classIndex)
+
+			self.psykerClassInfoPanel:Clear()
+
+			if (panel.classData.name) then
+				local name = self.psykerClassInfoPanel:Add("DLabel")
+				name:SetFont("ixMenuButtonHugeFont")
+				name:SetText(L(panel.classData.name):utf8upper())
+				name:SetTextColor(faction.color or color_white)
+				name:SizeToContents()
+				name:Dock(TOP)
+				name:DockMargin(0, 0, 0, 8)
+			end
+
+			if (panel.classData.description) then
+				local description = self.psykerClassInfoPanel:Add("DLabel")
+				description:SetFont("ixMenuButtonLabelFont")
+				description:SetText(L(panel.classData.description))
+				description:SetWrap(true)
+				description:SetAutoStretchVertical(true)
+				description:Dock(TOP)
+			end
+		end
+
+		classButtons[#classButtons + 1] = button
+		self.psykerClassButtons[#self.psykerClassButtons + 1] = button
+
+		-- Seleccionar la primera clase por defecto o la clase marcada como default
+		if (classData.data.isDefault or firstClass) then
+			button:SetSelected(true)
+			firstClass = false
+		end
+	end
+
+	-- Actualizar el modelo del panel de clases
+	self.psykerClassModel:SetModel(self.descriptionModel:GetModel())
 end
 
 function PANEL:VerifyProgression(name)

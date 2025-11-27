@@ -10,8 +10,9 @@ FACTION.models = {
 }
     function FACTION:OnCharacterCreated(client, character)
         local inventory = character:GetInventory()
-
-        
+        if (character:GetClass() == CLASS_PSYKERMINORIS) then
+            inventory:Add("minorpsyker", 1)
+        end
     end
 
 

@@ -99,6 +99,17 @@ end
 function Schema:PlayerLoadedCharacter(client, character, oldCharacter)
 	local faction = character:GetFaction()
 
+	-- Si es un psyker y tiene una clase guardada en data, asignarla
+	if (faction == FACTION_PSYKER) then
+		local psykerClass = character:GetData("psykerClass")
+		if (psykerClass and ix.class.list[psykerClass]) then
+			-- Verificar que la clase pertenece a la facción psyker
+			if (ix.class.list[psykerClass].faction == FACTION_PSYKER) then
+				character:SetClass(psykerClass)
+			end
+		end
+	end
+
 	if (faction == FACTION_CITIZEN) then
 		self:AddCombineDisplayMessage("@cCitizenLoaded", Color(255, 100, 255, 255))
 	elseif (client:IsCombine()) then
@@ -390,3 +401,34 @@ netstream.Hook("ViewObjectivesUpdate", function(client, text)
 		Schema:AddCombineDisplayMessage("@cViewObjectivesFiller", nil, client, date:spanseconds())
 	end
 end)
+
+-- Hook para asignar la clase del psyker cuando se crea el personaje
+function Schema:OnCharacterCreated(client, character)
+	-- Verificar si la facción es psyker y si se envió una clase en el payload
+	if (character:GetFaction() == FACTION_PSYKER) then
+		-- Buscar la clase por defecto para psyker si no hay ninguna asignada
+		local classIndex = character:GetClass()
+		
+		if (!classIndex or classIndex == 0) then
+			-- Buscar la primera clase disponible para psyker
+			for k, v in pairs(ix.class.list) do
+				if (v.faction == FACTION_PSYKER) then
+					character:SetClass(k)
+					break
+				end
+			end
+		end
+	end
+end
+
+-- Hook para procesar la clase enviada en el payload de creación
+function Schema:AdjustCreationPayload(client, payload, newPayload)
+	-- Si el payload contiene una clase y la facción es psyker, guardamos la clase
+	if (payload.class and payload.faction) then
+		local faction = ix.faction.indices[payload.faction]
+		if (faction and faction.uniqueID == "psyker") then
+			newPayload.data = newPayload.data or {}
+			newPayload.data.psykerClass = payload.class
+		end
+	end
+end
