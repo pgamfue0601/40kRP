@@ -1,4 +1,5 @@
 CLASS.name = "Psiquico Minoris"
+CLASS.description = "Un psiquico de capacidades limitadas."
 CLASS.faction = FACTION_PSYKER
 CLASS.isDefault = true
 function CLASS:CanSwitchTo(client)

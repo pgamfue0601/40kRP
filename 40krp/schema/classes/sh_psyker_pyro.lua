@@ -1,4 +1,5 @@
 CLASS.name = "Psiquico Pirokinetico"
+CLASS.description = "Un psiquico especializado en el control del fuego."
 CLASS.faction = FACTION_PSYKER
 CLASS.isDefault = true
 function CLASS:CanSwitchTo(client)
