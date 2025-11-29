@@ -80,8 +80,22 @@ end
 
 if (SERVER) then return end
 
+-- Fuente especial para Mechanicus
+surface.CreateFont("ixMechanicusDisplayFont", {
+	font = "LED Calculator",
+	size = ScreenScale(8),
+	weight = 500,
+	extended = true
+})
+
 local stored = PLUGIN.chatDisplay or {}
 PLUGIN.chatDisplay = stored
+
+-- Función para verificar si un jugador es Mechanicus
+local function IsMechanicus(ply)
+	if (!IsValid(ply)) then return false end
+	return ply:Team() == FACTION_MECHANICUS
+end
 
 function PLUGIN:MessageReceived(client, messageInfo)
 	if (IsValid(client) and ix.option.Get("chatDisplayEnabled", false)) then
@@ -167,7 +181,7 @@ function PLUGIN:HUDPaint()
 		local distanceMult = (1 - distSqr * 0.003 * 0.003) -- 0.003 == 1/300
 		local alpha = 255 * camMult * distanceMult
 		local col1, col2 = Color(175, 255, 150, alpha), Color(0, 0, 0, alpha)
-		local font = "ixCustomFont"
+		local font = IsMechanicus(player) and "ixMechanicusDisplayFont" or "ixCustomFont"
 
 		surface.SetFont(font)
 
@@ -199,7 +213,7 @@ function PLUGIN:HUDPaint()
 					local distanceMult = (1 - distSqr * 0.003 * 0.003) -- 0.003 == 1/300
 					local alpha = 255 * camMult * distanceMult * math.min(v.fadeTime, 1)
 					local col1, col2 = ColorAlpha(v.color, alpha), Color(0, 0, 0, alpha)
-					local font = "ixCustomFont"
+					local font = IsMechanicus(k) and "ixMechanicusDisplayFont" or "ixCustomFont"
 
 					surface.SetFont(font)
 

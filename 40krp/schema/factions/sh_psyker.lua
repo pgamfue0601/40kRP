@@ -12,6 +12,8 @@ FACTION.models = {
         local inventory = character:GetInventory()
         if (character:GetClass() == CLASS_PSYKERMINORIS) then
             inventory:Add("minorpsyker", 1)
+        elseif (character:GetClass() == CLASS_PYROKINESIS) then
+            inventory:Add("pyropysker", 1)
         end
     end
 

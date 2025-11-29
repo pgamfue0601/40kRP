@@ -17,35 +17,7 @@ function FACTION:OnCharacterCreated(client, character)
     inventory:Add("ripperammo", 2)
     inventory:Add("ogrynmace", 1)
 
-    character:SetName("Probitor Auxiliar " .. character:GetName())
-
-    -- Cambiar bodygroups según el modelo seleccionado
-    local model = character:GetModel()
-    local bodygroups = {}
-
-    if model == "models/dizcordum/wk/ogryn/ogryn_bald.mdl" then
-        bodygroups = { [0] = 1 } -- Ejemplo: bodygroup 0 a 1
-    elseif model == "models/dizcordum/wk/ogryn/ogryn_krieg.mdl" then
-        bodygroups = { [1] = 2 }
-    elseif model == "models/dizcordum/wk/ogryn/ogryn_bonehead.mdl" then
-        bodygroups = { [2] = 1 }
-    elseif model == "models/dizcordum/wk/ogryn/ogryn_bullgryn.mdl" then
-        bodygroups = { [0] = 2, [1] = 1 }
-    end
-
-    -- Aplica los bodygroups al personaje
-    for k, v in pairs(bodygroups) do
-        character:SetData("bodygroup_" .. k, v)
-    end
-
-    -- Cuando el jugador spawnea, aplica los bodygroups al modelo
-    timer.Simple(0, function()
-        if IsValid(client) and client:GetCharacter() == character then
-            for k, v in pairs(bodygroups) do
-                client:SetBodygroup(k, v)
-            end
-        end
-    end)
+    character:SetName("Probitor Auxiliaris " .. character:GetName())
 end
 
 FACTION_OGRYN = FACTION.index

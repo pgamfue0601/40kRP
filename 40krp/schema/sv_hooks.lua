@@ -102,10 +102,18 @@ function Schema:PlayerLoadedCharacter(client, character, oldCharacter)
 	-- Si es un psyker y tiene una clase guardada en data, asignarla
 	if (faction == FACTION_PSYKER) then
 		local psykerClass = character:GetData("psykerClass")
-		if (psykerClass and ix.class.list[psykerClass]) then
-			-- Verificar que la clase pertenece a la facción psyker
-			if (ix.class.list[psykerClass].faction == FACTION_PSYKER) then
-				character:SetClass(psykerClass)
+		print("[40kRP DEBUG] PlayerLoadedCharacter - psykerClass guardada: ", psykerClass)
+		print("[40kRP DEBUG] Tipo de psykerClass: ", type(psykerClass))
+		
+		if (psykerClass) then
+			print("[40kRP DEBUG] ix.class.list[psykerClass]: ", ix.class.list[psykerClass])
+			
+			if (ix.class.list[psykerClass]) then
+				-- Verificar que la clase pertenece a la facción psyker
+				if (ix.class.list[psykerClass].faction == FACTION_PSYKER) then
+					print("[40kRP DEBUG] Asignando clase: ", psykerClass)
+					character:SetClass(psykerClass)
+				end
 			end
 		end
 	end
@@ -423,12 +431,23 @@ end
 
 -- Hook para procesar la clase enviada en el payload de creación
 function Schema:AdjustCreationPayload(client, payload, newPayload)
+	-- Debug: Mostrar el payload recibido
+	print("[40kRP DEBUG] AdjustCreationPayload llamado")
+	print("[40kRP DEBUG] payload.faction: ", payload.faction)
+	print("[40kRP DEBUG] payload.class: ", payload.class)
+	
 	-- Si el payload contiene una clase y la facción es psyker, guardamos la clase
-	if (payload.class and payload.faction) then
-		local faction = ix.faction.indices[payload.faction]
-		if (faction and faction.uniqueID == "psyker") then
+	if (payload.class) then
+		local factionTable = ix.faction.indices[payload.faction]
+		print("[40kRP DEBUG] factionTable: ", factionTable)
+		if (factionTable) then
+			print("[40kRP DEBUG] factionTable.uniqueID: ", factionTable.uniqueID)
+		end
+		
+		if (factionTable and factionTable.uniqueID == "psyker") then
 			newPayload.data = newPayload.data or {}
 			newPayload.data.psykerClass = payload.class
+			print("[40kRP DEBUG] Guardando psykerClass: ", payload.class)
 		end
 	end
 end

@@ -1,7 +1,7 @@
 CLASS.name = "Psiquico Pirokinetico"
 CLASS.description = "Un psiquico especializado en el control del fuego."
 CLASS.faction = FACTION_PSYKER
-CLASS.isDefault = true
+CLASS.isDefault = false
 function CLASS:CanSwitchTo(client)
 end
 
@@ -10,8 +10,6 @@ if (SERVER) then
     end
 
     function CLASS:OnSet(client)
-        local inventory = client:GetCharacter():GetInventory()
-        inventory:Add(minorpsyker, 1)
     end
 
     function CLASS:OnSpawn(client)
